@@ -175,7 +175,7 @@ This project is licensed under the MIT License / هذا المشروع مرخص 
 ---
 
 ## Contact / التواصل
+- GitHub: [ayakakaa135-boop](https://github.com/ayakakaa135-boop/)
+- Email:ayakakaa135@gmail.com
 
-- GitHub: [your_username](https://github.com/your_username)
-- Email: your_email@example.com
 
