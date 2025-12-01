@@ -1,0 +1,49 @@
+{% extends "base.html" %}
+{% load i18n %} <!-- 1. تحميل مكتبة الترجمة -->
+
+{% block title %}{% trans "Confirm Deletion" %}{% endblock %}
+
+{% block content %}
+
+<div class="content-header">
+    <div class="container-fluid">
+        <div class="row mb-2">
+            <div class="col-sm-6">
+                <h1 class="m-0">{% trans "Confirm Deletion" %}</h1>
+            </div>
+        </div>
+    </div>
+</div>
+
+<section class="content">
+    <div class="container-fluid">
+        <div class="row">
+            <div class="col-md-6">
+                <!-- استخدام بطاقة من AdminLTE للتنسيق -->
+                <div class="card card-danger">
+                    <div class="card-header">
+                        <h3 class="card-title">{% trans "Are you sure?" %}</h3>
+                    </div>
+                    <div class="card-body">
+                        <!-- استخدام blocktrans للنص الذي يحتوي على متغير -->
+                        <p>{% blocktrans %}Are you sure you want to delete the project "{{ object.name }}"? This action cannot be undone.{% endblocktrans %}</p>
+                    </div>
+                    <form method="post">
+                        {% csrf_token %}
+                        <div class="card-footer">
+                            <!-- استخدام أزرار Bootstrap/AdminLTE مع الألوان المناسبة -->
+                            <button type="submit" class="btn btn-danger">
+                                <i class="fas fa-trash"></i> {% trans "Yes, delete" %}
+                            </button>
+                            <a href="{% url 'dashboard' %}" class="btn btn-default float-right">
+                                <i class="fas fa-times"></i> {% trans "Cancel" %}
+                            </a>
+                        </div>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+
+{% endblock %}

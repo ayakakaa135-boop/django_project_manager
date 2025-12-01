@@ -1,0 +1,40 @@
+<!-- projects/templates/registration/login.html -->
+{% extends "base.html" %}
+{% load crispy_forms_tags i18n %} <!-- 1. تحميل المكتبات -->
+
+{% block title %}{% trans "Log in" %}{% endblock %}
+
+{% block content %}
+<div class="hold-transition login-page">
+    <div class="login-box">
+        <div class="login-logo">
+            <a href="{% url 'dashboard' %}"><b>{% trans "Project" %}</b>{% trans "Manager" %}</a>
+        </div>
+        <!-- /.login-logo -->
+        <div class="card">
+            <div class="card-body login-card-body">
+                <p class="login-box-msg">{% trans "Sign in to start your session" %}</p>
+
+                <form method="post">
+                    {% csrf_token %}
+                    {{ form|crispy }}
+                    <div class="row">
+                        <div class="col-12">
+                            <button type="submit" class="btn btn-primary btn-block">{% trans "Log in" %}</button>
+                        </div>
+                    </div>
+                </form>
+
+                <p class="mb-1">
+                    <a href="#">{% trans "I forgot my password" %}</a>
+                </p>
+                <p class="mb-0">
+                    {% trans "Don't have an account?" %} <a href="{% url 'signup' %}" class="text-center">{% trans "Register a new membership" %}</a>
+                </p>
+            </div>
+            <!-- /.login-card-body -->
+        </div>
+    </div>
+    <!-- /.login-box -->
+</div>
+{% endblock %}

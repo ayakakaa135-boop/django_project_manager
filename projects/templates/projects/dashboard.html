@@ -1,0 +1,139 @@
+<!-- projects/templates/projects/dashboard.html -->
+{% extends "base.html" %}
+{% load i18n %} <!-- 1. تحميل مكتبة الترجمة -->
+
+{% block title %}{% trans "Dashboard" %}{% endblock %}
+
+{% block content %}
+
+<div class="content-header">
+    <div class="container-fluid">
+        <div class="row mb-2">
+            <div class="col-sm-6">
+                <h1 class="m-0">{% trans "Dashboard" %}</h1>
+            </div>
+            <div class="col-sm-6">
+                <ol class="breadcrumb float-sm-left">
+                    <li class="breadcrumb-item"><a href="#">{% trans "Home" %}</a></li>
+                    <li class="breadcrumb-item active">{% trans "Dashboard" %}</li>
+                </ol>
+            </div>
+        </div>
+    </div>
+</div>
+
+<section class="content">
+    <div class="container-fluid">
+        <!-- شريط البحث والإجراءات -->
+        <div class="row mb-3">
+            <div class="col-12">
+                <form method="get" action="{% url 'dashboard' %}" class="d-flex">
+                    <input class="form-control me-2" type="search" name="q" placeholder="{% trans 'Search for a project or task...' %}" aria-label="Search" value="{{ search_query }}">
+                    <button class="btn btn-outline-secondary" type="submit">{% trans "Search" %}</button>
+                </form>
+            </div>
+        </div>
+
+        {% if search_query %}
+        <div class="alert alert-info alert-dismissible">
+            <button type="button" class="btn-close" data-bs-dismiss="alert" aria-hidden="true"></button>
+            <h5><i class="icon fas fa-info"></i> {% trans "Search results for" %}: "{{ search_query }}"</h5>
+        </div>
+        {% endif %}
+
+        <!-- إحصائيات سريعة -->
+        <div class="row">
+            <div class="col-lg-3 col-6">
+                <div class="small-box bg-info">
+                    <div class="inner">
+                        <h3>{{ projects.count }}</h3>
+                        <p>{% trans "My Projects" %}</p>
+                    </div>
+                    <div class="icon"><i class="fas fa-folder"></i></div>
+                    <a href="#" class="small-box-footer">{% trans "More info" %} <i class="fas fa-arrow-circle-left"></i></a>
+                </div>
+            </div>
+            <div class="col-lg-3 col-6">
+                <div class="small-box bg-success">
+                    <div class="inner">
+                        <h3>{{ tasks.count }}</h3>
+                        <p>{% trans "Total Tasks" %}</p>
+                    </div>
+                    <div class="icon"><i class="fas fa-tasks"></i></div>
+                    <a href="#" class="small-box-footer">{% trans "More info" %} <i class="fas fa-arrow-circle-left"></i></a>
+                </div>
+            </div>
+        </div>
+
+        <!-- قوائم المشاريع والمهام -->
+        <div class="row">
+            <!-- قائمة المشاريع -->
+            <div class="col-md-6">
+                <div class="card">
+                    <div class="card-header">
+                        <h3 class="card-title">{% trans "Projects" %}</h3>
+                        <div class="card-tools">
+                            <a href="{% url 'project_create' %}" class="btn btn-tool btn-sm">
+                                <i class="fas fa-plus"></i> {% trans "New Project" %}
+                            </a>
+                        </div>
+                    </div>
+                    <div class="card-body p-0">
+                        <ul class="products-list product-list-in-card pl-2 pr-2">
+                            {% for project in projects %}
+                            <li class="item">
+                                <div class="product-img">
+                                    <i class="fas fa-project-diagram fa-2x text-muted"></i>
+                                </div>
+                                <div class="product-info">
+                                    <a href="{% url 'project_detail' project.id %}" class="product-title">{{ project.name }}
+                                        <span class="badge badge-warning float-right">{{ project.get_status_display }}</span>
+                                    </a>
+                                    <span class="product-description">
+                                        {{ project.description|truncatewords:10 }}
+                                    </span>
+                                </div>
+                            </li>
+                            {% empty %}
+                            <li class="item text-center text-muted p-3">{% trans "No projects found matching your search." %}</li>
+                            {% endfor %}
+                        </ul>
+                    </div>
+                </div>
+            </div>
+
+            <!-- قائمة المهام -->
+            <div class="col-md-6">
+                <div class="card">
+                    <div class="card-header">
+                        <h3 class="card-title">{% trans "Tasks" %}</h3>
+                    </div>
+                    <div class="card-body p-0">
+                        <ul class="products-list product-list-in-card pl-2 pr-2">
+                            {% for task in tasks %}
+                            <li class="item">
+                                <div class="product-img">
+                                    <i class="fas fa-clipboard-check fa-2x text-muted"></i>
+                                </div>
+                                <div class="product-info">
+                                    <a href="{% url 'project_detail' task.project.id %}#task-{{ task.id }}" class="product-title">{{ task.title }}
+                                        <span class="badge {% if task.completed %}bg-success{% else %}bg-danger{% endif %} float-right">
+                                            {% if task.completed %}{% trans "Completed" %}{% else %}{% trans "In Progress" %}{% endif %}
+                                        </span>
+                                    </a>
+                                    <span class="product-description">
+                                        {% trans "In project" %}: <strong>{{ task.project.name }}</strong> | {% trans "Due date" %}: {{ task.due_date|date:"Y-m-d"|default:"---" }}
+                                    </span>
+                                </div>
+                            </li>
+                            {% empty %}
+                            <li class="item text-center text-muted p-3">{% trans "No tasks found matching your search." %}</li>
+                            {% endfor %}
+                        </ul>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+{% endblock %}

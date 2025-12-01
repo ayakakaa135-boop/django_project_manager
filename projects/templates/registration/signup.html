@@ -1,0 +1,35 @@
+<!-- projects/templates/registration/signup.html -->
+{% extends "base.html" %}
+{% load crispy_forms_tags i18n %} <!-- 1. تحميل المكتبات -->
+
+{% block title %}{% trans "Register" %}{% endblock %}
+
+{% block content %}
+<div class="hold-transition register-page">
+    <div class="register-box">
+        <div class="register-logo">
+            <a href="{% url 'dashboard' %}"><b>{% trans "Project" %}</b>{% trans "Manager" %}</a>
+        </div>
+
+        <div class="card">
+            <div class="card-body register-card-body">
+                <p class="login-box-msg">{% trans "Register a new membership" %}</p>
+
+                <form method="post">
+                    {% csrf_token %}
+                    {{ form|crispy }}
+                    <div class="row">
+                        <div class="col-12">
+                            <button type="submit" class="btn btn-primary btn-block">{% trans "Register" %}</button>
+                        </div>
+                    </div>
+                </form>
+
+                <a href="{% url 'login' %}" class="text-center">{% trans "I already have a membership" %}</a>
+            </div>
+            <!-- /.form-box -->
+        </div><!-- /.card -->
+    </div>
+    <!-- /.register-box -->
+</div>
+{% endblock %}

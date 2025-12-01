@@ -1,0 +1,87 @@
+<!-- projects/templates/projects/task_form.html -->
+{% extends "base.html" %}
+{% load crispy_forms_tags i18n %}
+
+{% block title %}
+    {# استخدام شرطي لتحديد العنوان بناءً على وجود PK (معرف أساسي) #}
+    {% if form.instance.pk %}
+        {% trans "Edit Task" %}
+    {% else %}
+        {% trans "New Task" %}
+    {% endif %}
+{% endblock %}
+
+{% block content %}
+
+<!-- Content Header (Page header) -->
+<div class="content-header">
+    <div class="container-fluid">
+        <div class="row mb-2">
+            <div class="col-sm-6">
+                <h1 class="m-0">
+                    {# نفس المنطق في عنوان الصفحة #}
+                    {% if form.instance.pk %}
+                        {% trans "Edit Task" %}
+                    {% else %}
+                        {% trans "New Task" %}
+                    {% endif %}
+                </h1>
+            </div>
+        </div>
+    </div>
+</div>
+
+<section class="content">
+    <div class="container-fluid">
+        <div class="row justify-content-center"> <!-- استخدام justify-content-center لتوسيط الفورم -->
+            <div class="col-md-8">
+                <div class="card card-info"> <!-- استخدام بطاقة مناسبة من AdminLTE -->
+                    <div class="card-header">
+                        <h3 class="card-title">
+                            {% if form.instance.pk %}
+                                {% trans "Edit Task" %}
+                            {% else %}
+                                {% trans "Add New Task" %}
+                            {% endif %}
+                            {# ✅ عرض اسم المشروع #}
+                            {% if project %}
+                                - {{ project.name }}
+                            {% elif form.instance.project %}
+                                - {{ form.instance.project.name }}
+                            {% endif %}
+                        </h3>
+                    </div>
+
+                    <form method="post">
+                        <div class="card-body">
+                            {% csrf_token %}
+                            {{ form|crispy }}
+                        </div>
+                        <div class="card-footer justify-content-between"> <!-- استخدام flexbox للأزرار -->
+                            <button type="submit" class="btn btn-info">
+                                <i class="fas fa-save"></i> {% trans "Save" %}
+                            </button>
+
+
+                            {% if project %}
+                                <a href="{% url 'project_detail' project.pk %}" class="btn btn-default">
+                                    <i class="fas fa-times"></i> {% trans "Cancel" %}
+                                </a>
+                            {% elif form.instance.project %}
+                                <a href="{% url 'project_detail' form.instance.project.pk %}" class="btn btn-default">
+                                    <i class="fas fa-times"></i> {% trans "Cancel" %}
+                                </a>
+                            {% else %}
+                                <a href="{% url 'dashboard' %}" class="btn btn-default">
+                                    <i class="fas fa-times"></i> {% trans "Cancel" %}
+                                </a>
+                            {% endif %}
+                        </div>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+
+{% endblock %}

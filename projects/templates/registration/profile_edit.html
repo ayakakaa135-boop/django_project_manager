@@ -1,0 +1,45 @@
+<!-- projects/templates/registration/profile_edit.html -->
+{% extends "base.html" %}
+{% load crispy_forms_tags i18n %}
+
+{% block title %}{% trans "Edit Profile" %}{% endblock %}
+
+{% block content %}
+
+<!-- Content Header (Page header) -->
+<div class="content-header">
+    <div class="container-fluid">
+        <div class="row mb-2">
+            <div class="col-sm-6">
+                <h1 class="m-0">{% trans "Edit Profile" %}</h1>
+            </div>
+        </div>
+    </div>
+</div>
+
+<section class="content">
+    <div class="container-fluid">
+        <div class="row">
+            <div class="col-md-6">
+                <div class="card card-dark">
+                    <div class="card-header">
+                        <h3 class="card-title">{% trans "User Information" %}: {{ user.username }}</h3>
+                    </div>
+                    <form method="post" enctype="multipart/form-data">
+                        <div class="card-body">
+                            {% csrf_token %}
+                          
+                             {{ form|crispy }}
+                        </div>
+                        <div class="card-footer">
+                            <button type="submit" class="btn btn-dark">{% trans "Save Changes" %}</button>
+                            <a href="{% url 'dashboard' %}" class="btn btn-default float-right">{% trans "Cancel" %}</a>
+                        </div>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+
+{% endblock %}

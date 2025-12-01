@@ -1,0 +1,32 @@
+<!-- projects/templates/projects/category_form.html -->
+{% extends "base.html" %}
+{% load crispy_forms_tags i18n %}
+
+{% block title %}{% trans "New Category" %}{% endblock %}
+
+{% block content %}
+<!-- ... (Content Header) -->
+<section class="content">
+    <div class="container-fluid">
+        <div class="row">
+            <div class="col-md-6">
+                <div class="card card-warning">
+                    <div class="card-header">
+                        <h3 class="card-title">{% trans "Category Name" %}</h3>
+                    </div>
+                    <form method="post"  action="{% url 'category_create' %}">
+                        <div class="card-body">
+                            {% csrf_token %}
+                            {{ form|crispy }}
+                        </div>
+                        <div class="card-footer">
+                            <button type="submit" class="btn btn-warning">{% trans "Create" %}</button>
+                            <a href="{% url 'dashboard' %}" class="btn btn-default float-right">{% trans "Cancel" %}</a>
+                        </div>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+{% endblock %}
