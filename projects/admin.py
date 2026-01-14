@@ -19,13 +19,13 @@ class ProjectAdmin(admin.ModelAdmin):
     readonly_fields = ('tasks_count',)
 
     def get_queryset(self, request):
-        """نحسب عدد المهام لكل مشروع مرة واحدة بكفاءة"""
+    
         return super().get_queryset(request).annotate(
             tasks_count=Count('task')
         )
 
     def tasks_count(self, obj):
-        """نعرض العدد في العمود"""
+       
         return obj.tasks_count
 
 
@@ -38,4 +38,5 @@ class TaskAdmin(admin.ModelAdmin):
     list_display = ('title', 'project', 'completed', 'due_date', 'priority', 'creator')
     list_filter = ('completed', 'priority', 'due_date', 'project__category')
     search_fields = ('title', 'description', 'project__name')
+
     raw_id_fields = ('project',)
