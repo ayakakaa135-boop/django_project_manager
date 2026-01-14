@@ -4,7 +4,6 @@ from django.contrib.auth.forms import UserCreationForm
 from django.contrib.auth import login
 from django.contrib import messages
 from django.views import View
-
 from .models import Project, Task, Category,Profile
 from django.contrib.auth.decorators import login_required
 from django.views.generic import CreateView, UpdateView, DeleteView, DetailView
@@ -31,10 +30,10 @@ def signup_view(request):
 def dashboard_view(request):
     search_query = request.GET.get('q', '')
 
-    # ✅ التعديل الأول: إظهار جميع المشاريع (بدون تصفية حسب المالك)
+   
     projects_list = Project.objects.all()
-    # ✅ التعديل الثاني: إظهار جميع المهام (بدون تصفية حسب مالك المشروع)
-    tasks_list = Task.objects.all().select_related('project')  # أضفنا select_related لتحسين الأداء
+   
+    tasks_list = Task.objects.all().select_related('project')
 
     if search_query:
         projects_list = projects_list.filter(
@@ -59,7 +58,7 @@ class ProjectCreateView(LoginRequiredMixin, CreateView):
 
     def get_form_kwargs(self):
         kwargs = super().get_form_kwargs()
-        # ✅ ملاحظة: هذه الدالة لم تعد ضرورية إذا كنت لا تحتاجها لإعداد الفورم
+        
         kwargs['user'] = self.request.user
         return kwargs
 
@@ -70,7 +69,7 @@ class ProjectCreateView(LoginRequiredMixin, CreateView):
         return reverse_lazy('dashboard')
 
     def form_valid(self, form):
-        # ✅ ربط المشروع بالمستخدم الذي قام بإنشائه (ليكون هو المالك/المنشئ)
+        
         form.instance.owner = self.request.user
         return super().form_valid(form)
 
@@ -124,9 +123,9 @@ class ProjectDetailView(LoginRequiredMixin, DetailView):
 
 
 # projects/views.py
-from .forms import UserProfileForm # استيراد الفورم الجديد
+from .forms import UserProfileForm
 
-class ProfileUpdateView(LoginRequiredMixin, View): # نستخدم View عادي وليس UpdateView
+class ProfileUpdateView(LoginRequiredMixin, View): 
     template_name = 'registration/profile_edit.html'
 
     def get_object(self):
@@ -192,18 +191,15 @@ class TaskDeleteView(LoginRequiredMixin, DeleteView):
         return reverse_lazy('project_detail', kwargs={'pk': self.object.project.id})
 
 
-# projects/views.py
-
-# ... (باقي الكود قبل هذا الجزء) ...
 
 class CategoryCreateView(LoginRequiredMixin, CreateView):
     model = Category
     form_class = CategoryForm
     template_name = 'projects/category_form.html'
- # ✅ إضافة مسار النجاح: Class-Based Views تحتاج success_url لإعادة التوجيه بشكل صحيح.
     success_url = reverse_lazy('dashboard')
 
     def form_valid(self, form):
 
         form.instance.owner = self.request.user
+
         return super().form_valid(form)
