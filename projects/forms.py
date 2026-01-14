@@ -27,7 +27,7 @@ class TaskForm(forms.ModelForm):
 
     def __init__(self, *args, **kwargs):
         super().__init__(*args, **kwargs)
-        # حقل المشروع غير مطلوب لأنه محدد من الفيو
+
         if 'project' in self.fields:
             self.fields['project'].required = False
 
@@ -39,13 +39,12 @@ class CategoryForm(forms.ModelForm):
 
 
 class UserProfileForm(forms.ModelForm):
-    # حقول من نموذج User
+   User
     username = forms.CharField(max_length=150)
     email = forms.EmailField()
     first_name = forms.CharField(max_length=30, required=False)
     last_name = forms.CharField(max_length=30, required=False)
 
-    # حقل من نموذج Profile
     image = forms.ImageField(required=False, label="Profile Picture")
 
     class Meta:
@@ -53,11 +52,11 @@ class UserProfileForm(forms.ModelForm):
         fields = ('username', 'email', 'first_name', 'last_name')
 
     def __init__(self, *args, **kwargs):
-        # الحصول على كائن المستخدم من kwargs
+     
         self.user = kwargs.pop('user', None)
         super(UserProfileForm, self).__init__(*args, **kwargs)
 
-        # إذا كان المستخدم موجودًا (في حالة التعديل)، قم بملء الحقول الأولية
+      
         if self.user:
             self.fields['username'].initial = self.user.username
             self.fields['email'].initial = self.user.email
@@ -66,10 +65,10 @@ class UserProfileForm(forms.ModelForm):
             try:
                 self.fields['image'].initial = self.user.profile.image
             except Profile.DoesNotExist:
-                pass  # لا يوجد ملف شخصي، تجاوز الخطأ
+                pass 
 
     def save(self, commit=True):
-        # لا نحفظ الفورم مباشرة، بل نحدّث كائن المستخدم الموجود
+    
         user = self.user
         user.username = self.cleaned_data['username']
         user.email = self.cleaned_data['email']
@@ -78,7 +77,7 @@ class UserProfileForm(forms.ModelForm):
         if commit:
             user.save()
 
-            # التعامل مع صورة الملف الشخصي
+            
             profile, created = Profile.objects.get_or_create(user=user)
             if self.cleaned_data['image']:
                 profile.image = self.cleaned_data['image']
@@ -94,4 +93,5 @@ class UserUpdateForm(forms.ModelForm):
 class ProfileUpdateForm(forms.ModelForm):
     class Meta:
         model = Profile
+
         fields = ['image']
